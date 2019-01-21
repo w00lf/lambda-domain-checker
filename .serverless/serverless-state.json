@@ -1,0 +1,337 @@
+{
+  "service": {
+    "service": "domains-checker",
+    "serviceObject": {
+      "name": "domains-checker"
+    },
+    "provider": {
+      "stage": "dev",
+      "region": "us-east-1",
+      "variableSyntax": "\\${([ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}",
+      "name": "aws",
+      "runtime": "nodejs8.10",
+      "profile": "serverless",
+      "environment": {
+        "TELEGRAM_TOKEN": "531309122:AAGSH3cTZcNHfdXrqvs40lk4Dbv_mVbLMVo",
+        "NODE_ENV": "production",
+        "NOTIFY_CHAT_ID": "173916577",
+        "DB_USERNAME": "chief",
+        "DB_PASSWORD": "rumps2(slits",
+        "DB_NAME": "igor",
+        "DB_HOSTNAME": "psql.cr5hrjd9tiuu.us-east-1.rds.amazonaws.com"
+      },
+      "versionFunctions": true,
+      "remoteFunctionData": null,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          },
+          "HandlerLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/domains-checker-dev-handler"
+            }
+          },
+          "MigratorLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/domains-checker-dev-migrator"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "dev",
+                        "domains-checker",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/domains-checker-dev-handler:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/domains-checker-dev-migrator:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/domains-checker-dev-handler:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/domains-checker-dev-migrator:*:*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "domains-checker",
+                    "dev",
+                    "us-east-1",
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "HandlerLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/domains-checker/dev/1548065883301-2019-01-21T10:18:03.301Z/domains-checker.zip"
+              },
+              "FunctionName": "domains-checker-dev-handler",
+              "Handler": "handler.main",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "TELEGRAM_TOKEN": "531309122:AAGSH3cTZcNHfdXrqvs40lk4Dbv_mVbLMVo",
+                  "NODE_ENV": "production",
+                  "NOTIFY_CHAT_ID": "173916577",
+                  "DB_USERNAME": "chief",
+                  "DB_PASSWORD": "rumps2(slits",
+                  "DB_NAME": "igor",
+                  "DB_HOSTNAME": "psql.cr5hrjd9tiuu.us-east-1.rds.amazonaws.com"
+                }
+              }
+            },
+            "DependsOn": [
+              "HandlerLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "HandlerLambdaVersionWYtpwOA27xouwsB02ruMwwYxRlqEt0i1lHmQWzIX88": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HandlerLambdaFunction"
+              },
+              "CodeSha256": "oKsWR28UqrnwFtmes0GTV8XKZYE1tU9iMZHcmhwcOKE="
+            }
+          },
+          "MigratorLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/domains-checker/dev/1548065883301-2019-01-21T10:18:03.301Z/domains-checker.zip"
+              },
+              "FunctionName": "domains-checker-dev-migrator",
+              "Handler": "migrator.main",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "TELEGRAM_TOKEN": "531309122:AAGSH3cTZcNHfdXrqvs40lk4Dbv_mVbLMVo",
+                  "NODE_ENV": "production",
+                  "NOTIFY_CHAT_ID": "173916577",
+                  "DB_USERNAME": "chief",
+                  "DB_PASSWORD": "rumps2(slits",
+                  "DB_NAME": "igor",
+                  "DB_HOSTNAME": "psql.cr5hrjd9tiuu.us-east-1.rds.amazonaws.com"
+                }
+              }
+            },
+            "DependsOn": [
+              "MigratorLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "MigratorLambdaVersionqbliWrbw5yTNuyqhBT9Gk01awDdMfeyyqvv5xadgwQ": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "MigratorLambdaFunction"
+              },
+              "CodeSha256": "oKsWR28UqrnwFtmes0GTV8XKZYE1tU9iMZHcmhwcOKE="
+            }
+          },
+          "HandlerEventsRuleSchedule1": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+              "ScheduleExpression": "rate(30 minutes)",
+              "State": "ENABLED",
+              "Targets": [
+                {
+                  "Arn": {
+                    "Fn::GetAtt": [
+                      "HandlerLambdaFunction",
+                      "Arn"
+                    ]
+                  },
+                  "Id": "handlerSchedule"
+                }
+              ]
+            }
+          },
+          "HandlerLambdaPermissionEventsRuleSchedule1": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandlerLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "events.",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "SourceArn": {
+                "Fn::GetAtt": [
+                  "HandlerEventsRuleSchedule1",
+                  "Arn"
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "HandlerLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HandlerLambdaVersionWYtpwOA27xouwsB02ruMwwYxRlqEt0i1lHmQWzIX88"
+            }
+          },
+          "MigratorLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "MigratorLambdaVersionqbliWrbw5yTNuyqhBT9Gk01awDdMfeyyqvv5xadgwQ"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket"
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "pluginsData": {},
+    "functions": {
+      "handler": {
+        "handler": "handler.main",
+        "events": [
+          {
+            "schedule": "rate(30 minutes)"
+          }
+        ],
+        "name": "domains-checker-dev-handler",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      },
+      "migrator": {
+        "handler": "migrator.main",
+        "events": [],
+        "name": "domains-checker-dev-migrator",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs8.10",
+        "vpc": {}
+      }
+    },
+    "artifact": "/Users/mitaraskin/Work/Personal/Sandbox/checker/.serverless/domains-checker.zip"
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/domains-checker/dev/1548065883301-2019-01-21T10:18:03.301Z",
+    "artifact": "domains-checker.zip"
+  }
+}
